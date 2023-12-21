@@ -2,6 +2,7 @@ from dotenv import dotenv_values
 from requests import Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json
+import pandas as pd
 
 config = dotenv_values(".env")
 key = config["API_KEY"]
@@ -38,9 +39,15 @@ def get_data(start, limit, convert, key, url):
             ],
         }
     except (ConnectionError, Timeout, TooManyRedirects) as e:
-        print(e)
+        print(f"Error to get data from API: {e}")
+        exit(1)
 
-    print(coin_dict)
+    coins_df = pd.DataFrame(
+        coin_dict,
+        columns=coin_dict.keys(),
+    )
+    print("Data on Pandas Dataframe:\n")
+    print(coins_df.head())
 
 
 get_data("1", "10", "USD", key, url)
