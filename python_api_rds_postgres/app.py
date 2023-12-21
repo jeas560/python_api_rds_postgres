@@ -9,6 +9,23 @@ key = config["API_KEY"]
 url = config["URL"]
 
 
+def check_if_valid_data(df: pd.DataFrame) -> bool:
+    if df.empty:
+        print("\nDataframe empty. Finishing execution")
+        return False
+
+    if df.symbol.empty:
+        raise Exception("\nSymbol is Null or the value is empty")
+
+    if df.price.empty:
+        raise Exception("\nPrice is Null or the value is empty")
+
+    if df.data_added.empty:
+        raise Exception("\nData is Null or the value is empty")
+
+    return True
+
+
 def get_data(start, limit, convert, key, url):
     parameters = {
         "start": start,
@@ -46,8 +63,11 @@ def get_data(start, limit, convert, key, url):
         coin_dict,
         columns=coin_dict.keys(),
     )
+
     print("Data on Pandas Dataframe:\n")
     print(coins_df.head())
+
+    check_if_valid_data(coins_df)
 
 
 get_data("1", "10", "USD", key, url)
