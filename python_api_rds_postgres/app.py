@@ -4,7 +4,9 @@ from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json
 import pandas as pd
 
-config = dotenv_values(".env")
+from model import Coins
+
+config = dotenv_values("../.env.development")
 key = config["API_KEY"]
 url = config["URL"]
 
@@ -20,13 +22,29 @@ def check_if_valid_data(df: pd.DataFrame) -> bool:
     if df.price.empty:
         raise Exception("\nPrice is Null or the value is empty")
 
-    if df.data_added.empty:
-        raise Exception("\nData is Null or the value is empty")
+    if df.date_added.empty:
+        raise Exception("\nDate is Null or the value is empty")
 
     return True
 
 
-def get_data(start, limit, convert, key, url):
+def load_data(table_name, coins_df, session_db, engine_db):
+    if check_if_valid_data(coins_df):
+        print("\nData valid, proceed to Load stage")
+
+    try:
+        coins_df.to_sql(table_name, engine_db, index=False, if_exists="append")
+        print("\nData Loaded on Database")
+    except ValueError as e:
+        print(f"\nFail to load data on database, Error: {e}")
+
+    session_db.commit()
+    session_db.close()
+    print("\nClose database successfully")
+    return session_db
+
+
+def get_data(session_db, engine_db, start, limit, convert, key, url):
     parameters = {
         "start": start,
         "limit": limit,
@@ -67,7 +85,9 @@ def get_data(start, limit, convert, key, url):
     print("Data on Pandas Dataframe:\n")
     print(coins_df.head())
 
-    check_if_valid_data(coins_df)
+    load_data("Coins", coins_df, session_db, engine_db)
 
 
-get_data("1", "10", "USD", key, url)
+get_session_db, get_engine = Coins.start()
+
+get_data(get_session_db, get_engine, "1", "10", "USD", key, url)
