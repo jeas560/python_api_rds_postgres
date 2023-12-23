@@ -1,9 +1,8 @@
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Float, URL
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
 from dotenv import dotenv_values
 
-config = dotenv_values("../.env.development")
+config = dotenv_values(".env.development")
 Base = declarative_base()
 
 url_object = URL.create(
@@ -17,7 +16,7 @@ url_object = URL.create(
 
 
 class Coins(Base):
-    __tablename__ = "Coins"
+    __tablename__ = "coins"
     id = Column(Integer, primary_key=True)
     name = Column(String)
     symbol = Column(String)

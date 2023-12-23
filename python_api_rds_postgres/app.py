@@ -4,9 +4,9 @@ from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json
 import pandas as pd
 
-from model import Coins
+import model
 
-config = dotenv_values("../.env.development")
+config = dotenv_values(".env.development")
 key = config["API_KEY"]
 url = config["URL"]
 
@@ -85,9 +85,9 @@ def get_data(session_db, engine_db, start, limit, convert, key, url):
     print("Data on Pandas Dataframe:\n")
     print(coins_df.head())
 
-    load_data("Coins", coins_df, session_db, engine_db)
+    load_data("coins", coins_df, session_db, engine_db)
 
 
-get_session_db, get_engine = Coins.start()
+get_session_db, get_engine = model.Coins.start()
 
 get_data(get_session_db, get_engine, "1", "10", "USD", key, url)
