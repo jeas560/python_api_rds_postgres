@@ -6,7 +6,7 @@ import pandas as pd
 
 import model
 
-config = dotenv_values(".env.development")
+config = dotenv_values(".env")
 key = config["API_KEY"]
 url = config["URL"]
 

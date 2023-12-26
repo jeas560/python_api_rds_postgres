@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, Column, Integer, String, DateTime, Float, 
 from sqlalchemy.orm import sessionmaker, declarative_base
 from dotenv import dotenv_values
 
-config = dotenv_values(".env.development")
+config = dotenv_values(".env")
 Base = declarative_base()
 
 url_object = URL.create(

@@ -2,6 +2,8 @@
 
 # Environments
 .env
+.env.aws
+.env.development
 .venv
 env/
 venv/
